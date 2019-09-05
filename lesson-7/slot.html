@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+<div id="app">
+    <todo>
+        <todo-title slot="todo-title" v-bind:title="title"></todo-title>
+        <todo-items slot="todo-items" v-for="(item,index) in items" v-bind:item="item" v-bind:index="index" v-on:remove="removeVue(index)"></todo-items>
+    </todo>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/vue@2.5.21/dist/vue.js"></script>
+<script type="text/javascript">
+    Vue.component("todo",{
+       template: "<div>\
+       <slot name='todo-title'></slot>\
+       <slot name='todo-items'></slot>\
+           </div>\
+        "
+    });
+
+    Vue.component("todo-title",{
+        props:["title"],
+       template: "<div>{{title}}</div>"
+    });
+
+    Vue.component("todo-items",{
+        props: ["item","index"],
+       template:"<ul>\
+       <li>{{index}}-{{item}}<button @click='remove()'>删除</button></li>\
+       </ul>\
+       ",
+        methods:{
+            remove:function () {
+                this.$emit("remove",this.index);//调用插槽定义的删除数组方法
+            }
+        }
+    });
+    var vm = new Vue({
+        el:"#app",
+        data:{
+            title:"三块广告牌",
+            items:["张三","李四","王五"]
+        },
+        methods: {
+            removeVue:function (index) {
+                this.items.splice(index, 1);//删除数组
+            }
+        }
+    });
+</script>
+</body>
+</html>
